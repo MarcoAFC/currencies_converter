@@ -29,10 +29,12 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   double dollar;
   double euro;
+  double peso;
 
   final realController = TextEditingController();
   final dollarController = TextEditingController();
   final euroController = TextEditingController();
+  final pesoController = TextEditingController();
 
   void _realChanged(String text){
     if (text.isEmpty){
@@ -42,6 +44,8 @@ class _HomeState extends State<Home> {
     double real = double.parse(text);
     dollarController.text = ((real/dollar)).toStringAsFixed(2);
     euroController.text = (real/euro).toStringAsFixed(2);
+    pesoController.text = (real/peso).toStringAsFixed(2);
+
   }
   void _dollarChanged(String text){
     if (text.isEmpty){
@@ -51,6 +55,8 @@ class _HomeState extends State<Home> {
     double dollar = double.parse(text);
     realController.text = ((dollar * this.dollar)).toStringAsFixed(2);
     euroController.text = (dollar * this.dollar/euro).toStringAsFixed(2);
+    pesoController.text = (dollar * this.dollar/peso).toStringAsFixed(2);
+
   }
   
   void _euroChanged(String text){
@@ -61,12 +67,26 @@ class _HomeState extends State<Home> {
     double euro = double.parse(text);
     realController.text = ((euro * this.euro)).toStringAsFixed(2);
     dollarController.text = (euro * this.euro/dollar).toStringAsFixed(2);
+    pesoController.text = (euro * this.euro/peso).toStringAsFixed(2);
   }
 
+  void _pesoChanged(String text){
+    if (text.isEmpty){
+      _clearAll();
+      return;
+    }
+    double peso = double.parse(text);
+    realController.text = ((peso * this.peso)).toStringAsFixed(2);
+    dollarController.text = (peso * this.peso/dollar).toStringAsFixed(2);
+    euroController.text = (peso * this.peso/euro).toStringAsFixed(2);
+
+  }
   void _clearAll(){
     realController.text = "";
     euroController.text = "";
     dollarController.text = "";
+    pesoController.text = "";
+
   }
 
   @override
@@ -112,7 +132,8 @@ class _HomeState extends State<Home> {
               }
               else{
                 dollar = snapshot.data["results"]["currencies"]["USD"]["buy"];
-                euro = snapshot.data["results"]["currencies"]["EUR"]["buy"];            
+                euro = snapshot.data["results"]["currencies"]["EUR"]["buy"];
+                peso = snapshot.data["results"]["currencies"]["ARS"]["buy"];
                 return SingleChildScrollView(
                   padding: EdgeInsets.all(20.0),
                   child: Column(
@@ -124,6 +145,9 @@ class _HomeState extends State<Home> {
                       buildTextField("Dólares", "US\$ ", dollarController, _dollarChanged),
                       Divider(),
                       buildTextField("Euros", "€ ", euroController, _euroChanged),
+                      Divider(),
+                      buildTextField("Pesos", "ARS\$ ", pesoController, _pesoChanged),
+
                       
                     ],
                   ),
